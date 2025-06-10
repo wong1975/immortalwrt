@@ -23,7 +23,7 @@ on:
       CACHE_BUILD:
         description: '缓存加速'
         required: false
-        default: 'true'
+        default: 'false' #true
         type: boolean
       SSH_ACTION:
         description: 'SSH远程配置固件'
