@@ -14,7 +14,7 @@ on:
         required: true
         description: 选择需要编译的固件
         type: choice
-        default: immortalwrt_ax6600
+        default: immortalwrt_ax3600
         options:
           # - Lean_x86_64
           # - Lean_x86_64_Long
