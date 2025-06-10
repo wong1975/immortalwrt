@@ -350,27 +350,6 @@ jobs:
         name: ${{matrix.target}}_OpenWrt_firmware_${{ env.FILE_TIME }}
         path: ./artifact/firmware/
 
-    - name: 上传PVE/KVM镜像文件
-      if: steps.compile.outcome == 'success' && env.UPLOAD_QCOW2 == 'true'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{matrix.target}}_OpenWrt_pvekvm_${{ env.FILE_TIME }}
-        path: ./artifact/pvekvm/
-
-    - name: 上传Hyper-V镜像文件
-      if: steps.compile.outcome == 'success' && env.UPLOAD_VHDX == 'true'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{matrix.target}}_OpenWrt_hyperv_${{ env.FILE_TIME }}
-        path: ./artifact/hyperv/
-
-    - name: 上传VMware镜像文件
-      if: steps.compile.outcome == 'success' && env.UPLOAD_VMDK == 'true'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{matrix.target}}_OpenWrt_vmware_${{ env.FILE_TIME }}
-        path: ./artifact/vmware/
-
     - name: 上传插件包文件
       if: steps.compile.outcome == 'success' && env.UPLOAD_IPK == 'true'
       uses: actions/upload-artifact@v4
