@@ -54,7 +54,7 @@ jobs:
         target: ${{ fromJSON(
           github.event_name == 'schedule' && '["Lean_x86_64","Lean_x86_64_Long","immortalwrt_x86_64","immortalwrt_ax6600"]' || 
           format('["{0}"]', github.event.inputs.MODEL )
-        )}}
+          )}}
 
     steps:
     - name: Checkout 仓库
