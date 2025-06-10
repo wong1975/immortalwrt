@@ -1,35 +1,30 @@
 #
-#
 # 感谢p3terx大神的一键编译脚本
 # 
 # Copyright (C) 2019 P3TERX <https://p3terx.com>
 # <https://github.com/P3TERX/Actions-OpenWrt.git>
 #
 
-
 name: 编译 AX3600 immortalwrt固件
 
 on:
   workflow_dispatch:
     inputs:
-
       MODEL:
         required: true
         description: 选择需要编译的固件
         type: choice
         default: immortalwrt_ax6600
         options:
-          #- Lean_x86_64
-          #- Lean_x86_64_Long
-          #- immortalwrt_x86_64
+          # - Lean_x86_64
+          # - Lean_x86_64_Long
+          # - immortalwrt_x86_64
           - immortalwrt_ax6600
-
       CACHE_BUILD:
         description: '缓存加速'
         required: false
         default: 'true'
         type: boolean
-
       SSH_ACTION:
         description: 'SSH远程配置固件'
         required: false
@@ -38,17 +33,16 @@ on:
 
 # 定时触发编译(1,5,10,15,20,25,30早3点)
 # schedule:
-    #- cron: 0 17 4,9,14,19,24,31 * *
+#   - cron: 0 17 4,9,14,19,24,31 * *
 
 # 点赞☆Star触发编译
-#  watch:
-#    types: [started]
+# watch:
+#   types: [started]
 
-
-env: 
+env:
   TZ: Asia/Shanghai
 
-jobs: 
+jobs:
   build:
     runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
@@ -60,7 +54,7 @@ jobs:
         target: ${{ fromJSON(
           github.event_name == 'schedule' && '["Lean_x86_64","Lean_x86_64_Long","immortalwrt_x86_64","immortalwrt_ax6600"]' || 
           format('["{0}"]', github.event.inputs.MODEL )
-          )}}
+        )}}
 
     steps:
     - name: Checkout 仓库
@@ -85,7 +79,7 @@ jobs:
         echo "UPLOAD_RELEASE=${UPLOAD_RELEASE}" >> $GITHUB_ENV
         echo "WECHAT_WORK_PUSH=${WECHAT_WORK_PUSH}" >> $GITHUB_ENV
         echo "TELEGRAM_BOT=${TELEGRAM_BOT}" >> $GITHUB_ENV
-        #添加变量
+        # 添加变量
         echo "HOME=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
         echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
 
@@ -125,12 +119,7 @@ jobs:
     - name: 释放Ubuntu磁盘空间
       uses: jlumbroso/free-disk-space@main
       with:
-        # this might remove tools that are actually needed,
-        # if set to "true" but frees about 6 GB
         tool-cache: true
-        
-        # all of these default to true, but feel free to set to
-        # "false" if necessary for your workflow
         android: true
         dotnet: true
         haskell: true
@@ -227,7 +216,7 @@ jobs:
         make defconfig
 
     - name: SSH远程连接服务器
-      uses: mxschmitt/action-tmate@v3 #uses: db-one/debugger-action@main #（国内维护，兼容性好，中文文档），mxschmitt/action-tmate@v3（国际更常用，功能类似）
+      uses: mxschmitt/action-tmate@v3
       if: env.SSH_ACTIONS == 'true' || (github.event.inputs.SSH_ACTION == 'true')
 
     - name: 输出编译信息
@@ -249,7 +238,6 @@ jobs:
         echo "=========================================="
         echo
 
-
         ZZZ="package/lean/default-settings/files/zzz-default-settings"
         if [ -f "$ZZZ" ]; then
           echo "	    当前编译版本：$(cat $ZZZ|grep DISTRIB_REVISION= | sed 's/^.\{24\}//g' | sed 's/.\{26\}$//')"
@@ -258,7 +246,6 @@ jobs:
         echo "KERNEL_PATCHVER=$(cat target/linux/x86/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')" >> $GITHUB_ENV
         echo "	    内核版本：$(cat target/linux/x86/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')"
         echo "	    源码分支：${{ env.REPO_BRANCH }}"
-
         echo "	    编译时间：${{ env.FILE_TIME1 }}"
 
         echo
@@ -282,7 +269,6 @@ jobs:
 
         echo
         echo "=========================================="
-
         echo
         echo
         echo "输出完整插件信息..."
@@ -324,7 +310,6 @@ jobs:
         rm -rf $(find openwrt/bin/targets/ -type d -name "packages")
         cp -rf $(find openwrt/bin/packages/ -type f -name "*.ipk") ./artifact/package/ || true
         cp -rf $(find openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/ || true        
-        # cp -rf $(find openwrt/bin/targets/ -type f -name "*squashfs*efi*img*") ./artifact/firmware/
         cp -rf $(find openwrt/bin/targets/ -type f \( -name "*squashfs*efi*img*" -o -name "*squashfs*sysupgrade*bin*" -o -name "*squashfs*factory*bin*" \) ) ./artifact/firmware/
         cp -rf $(find openwrt/bin/targets/ -type f -name "*squashfs*efi*qcow2*") ./artifact/pvekvm/ || true
         cp -rf $(find openwrt/bin/targets/ -type f -name "*squashfs*efi*vhdx*") ./artifact/hyperv/ || true
@@ -392,7 +377,7 @@ jobs:
     - name: 删除运行记录
       uses: Mattraks/delete-workflow-runs@v2
       with:
-        token: ${{ secrets.MY_GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         repository: ${{ github.repository }}
         retain_days: 30     #保留最后多少记录不删除
         keep_minimum_runs: 0
@@ -404,4 +389,4 @@ jobs:
         keep_latest: 20         #保留多少个releases不删除
         delete_tags: true
       env:
-        GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
