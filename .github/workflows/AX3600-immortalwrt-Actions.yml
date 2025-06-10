@@ -19,16 +19,16 @@ on:
           # - Lean_x86_64
           # - Lean_x86_64_Long
           # - immortalwrt_x86_64
-          - immortalwrt_ax6600
+          - immortalwrt_ax3600
       CACHE_BUILD:
         description: '缓存加速'
         required: false
-        default: 'false' #true
+        default: 'true' #true
         type: boolean
       SSH_ACTION:
         description: 'SSH远程配置固件'
         required: false
-        default: 'true'
+        default: 'false'
         type: boolean
 
 # 定时触发编译(1,5,10,15,20,25,30早3点)
