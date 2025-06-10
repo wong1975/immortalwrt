@@ -365,30 +365,35 @@ jobs:
         path: ./artifact/buildinfo/
 
     - name: 自动发布固件到 Releases
-      uses: ncipollo/release-action@main
+      uses: ncipollo/release-action@v1
       if: steps.compile.outcome == 'success' && env.UPLOAD_RELEASE == 'true'
       with:
         name: ${{ env.FILE_TIME1 }} 「 ${{ env.FIRMWARE_MESSAGE }} 」
         tag: ${{ env.FILE_TIME2 }}-${{matrix.target}}
-        token: ${{ secrets.MY_GITHUB_TOKEN }}
-        body: |            
-            ★  源码 : ${{ env.REPO_URL }}
-            ★  分支 : ${{ env.REPO_BRANCH }}
-            ★  感谢源码作者无私分享！
+        token: ${{ secrets.GITHUB_TOKEN }}
+        body: |
+          ★  源码 : ${{ env.REPO_URL }}
+          ★  分支 : ${{ env.REPO_BRANCH }}
+          ★  感谢源码作者无私分享！
 
-            🖥 内核版本：${{ env.KERNEL_PATCHVER }}
+          🖥 内核版本：${{ env.KERNEL_PATCHVER }}
 
-            🎈 编译时间：${{ env.FILE_TIME1 }}
+          🎈 编译时间：${{ env.FILE_TIME1 }}
 
-            ⏰ 编译用时：${{ env.BUILD_TIME }}
+          ⏰ 编译用时：${{ env.BUILD_TIME }}
 
-            🎉 [ ${{ env.FIRMWARE_MESSAGE }} ]固件下载
+          🎉 [ ${{ env.FIRMWARE_MESSAGE }} ]固件下载
 
-            ━━━━━━━━━━━━━━━━━━━━
+          ━━━━━━━━━━━━━━━━━━━━
 
-            =========================================
-
+          =========================================
         artifacts: ./artifact/firmware/*
+        fail_on_unmatched_files: false
+
+    - name: 发布失败提示
+      if: failure() && env.UPLOAD_RELEASE == 'true'
+      run: |
+        echo "::error::固件发布到 Releases 失败，请检查 GITHUB_TOKEN 权限与 artifacts 路径！"
 
     - name: 删除运行记录
       uses: Mattraks/delete-workflow-runs@v2
