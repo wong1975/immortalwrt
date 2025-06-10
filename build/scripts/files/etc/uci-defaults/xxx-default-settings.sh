@@ -9,6 +9,7 @@ fi
 cp -rf /rom/etc/openclash/core/* /etc/openclash/core
 
 # 设置NTP时间服务器
+uci add_list system.ntp.server='stdtime.gov.hk'
 #uci add_list system.ntp.server='ntp.tencent.com'
 #uci add_list system.ntp.server='ntp1.aliyun.com'
 #uci add_list system.ntp.server='ntp.ntsc.ac.cn'
@@ -16,7 +17,7 @@ cp -rf /rom/etc/openclash/core/* /etc/openclash/core
 # uci commit system
 
 # 修改主机名称为 OpenWrt-86
-# uci set system.@system[0].hostname='OpenWrt-86'
+uci set system.@system[0].hostname='XiaoMi'
 
 # 设置默认主题
 uci set luci.main.mediaurlbase='/luci-static/argon' && uci commit luci
