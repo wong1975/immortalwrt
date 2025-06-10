@@ -47,7 +47,7 @@ EOF
 # ================ 主路由网络设置 =========================
 cat >> $ZZZ <<-EOF
 # 主路由模式下保留DHCP和常规NAT，适配IPv4/IPv6双栈
-uci set network.lan.ipaddr='192.168.31.1'                  # 主路由地址
+uci set network.lan.ipaddr='192.168.1.1'                   # 主路由地址
 uci set network.lan.netmask='255.255.255.0'
 uci delete network.lan.gateway                             # 主路由无需上游网关
 uci delete network.lan.dns                                 # 主路由自身为DNS
@@ -61,11 +61,11 @@ uci set firewall.@defaults[0].fullcone='1'                 # 如fullcone支持�
 uci set firewall.@defaults[0].fullcone6='1'
 
 # IPv6相关设置（如不需要IPv6可注释以下行）
-uci set network.lan.ip6assign='60'
-uci set dhcp.lan.ra='server'
-uci set dhcp.lan.dhcpv6='server'
-uci set dhcp.lan.ra_management='1'
-uci set dhcp.lan.leasetime='12h'
+#uci set network.lan.ip6assign='60'
+#uci set dhcp.lan.ra='server'
+#uci set dhcp.lan.dhcpv6='server'
+#uci set dhcp.lan.ra_management='1'
+#uci set dhcp.lan.leasetime='12h'
 
 # 配置Dropbear SSH服务
 uci set dropbear.@dropbear[0].enable='1'
